@@ -1,0 +1,974 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<meta name="theme-color" content="#350711">
+
+<meta
+  name="description"
+  content="Liquid Crafters — Blended with Passion, Served with Freshness."
+>
+
+<title>Liquid Crafters | Blended with Passion</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link
+  href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,600;1,700&display=swap"
+  rel="stylesheet"
+>
+
+<link rel="icon" href="favicon.png">
+
+<link rel="stylesheet" href="styles.css">
+
+<!-- Leaflet + OpenStreetMap styles -->
+<link
+  rel="stylesheet"
+  href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+  integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+  crossorigin=""
+>
+
+<style>
+  .delivery-map-section {
+    margin: 18px 0;
+  }
+
+  .delivery-map-section h3 {
+    margin: 0 0 8px;
+  }
+
+  #deliveryMap {
+    width: 100%;
+    height: 280px;
+    min-height: 240px;
+    border-radius: 14px;
+    border: 1px solid rgba(120, 75, 40, .25);
+    z-index: 1;
+  }
+
+  .delivery-map-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 12px;
+  }
+
+  .delivery-map-actions button {
+    flex: 1 1 180px;
+  }
+
+  #deliveryLocationMessage {
+    display: block;
+    margin-top: 10px;
+    font-size: .92rem;
+    line-height: 1.5;
+  }
+
+  .delivery-map-note {
+    font-size: .84rem;
+    opacity: .8;
+    margin: 6px 0 12px;
+  }
+</style>
+
+</head>
+
+<body>
+
+<!-- =====================================
+     HEADER
+===================================== -->
+
+<header class="site-header">
+
+  <a class="brand" href="#home" aria-label="Liquid Crafters home">
+
+    <img src="assets/logo-original.png" alt="Liquid Crafters logo">
+
+    <span>
+      Liquid<br>
+      Crafters
+    </span>
+
+  </a>
+
+  <button
+    class="mobile-menu"
+    id="mobileMenu"
+    aria-label="Open navigation"
+  >
+    ☰
+  </button>
+
+  <nav id="mainNav" aria-label="Main navigation">
+
+    <button class="nav-link active" data-page="home">
+      Home
+    </button>
+
+    <button class="nav-link" data-page="menu">
+      Menu <span class="chevron">⌄</span>
+    </button>
+
+    <button class="nav-link" data-page="offers">
+      Offers
+    </button>
+
+    <button class="nav-link" data-page="track">
+      Track Order
+    </button>
+
+    <button class="nav-link" data-page="about">
+      About
+    </button>
+
+  </nav>
+
+  <div class="header-actions">
+
+    <button class="icon-btn" id="searchOpen" aria-label="Search">
+      ⌕
+    </button>
+
+    <button class="icon-btn" id="wishlistOpen" aria-label="Wishlist">
+      ♡
+    </button>
+
+    <button class="icon-btn cart-icon" id="cartOpen" aria-label="Cart">
+      ♧
+      <i id="cartCount">0</i>
+    </button>
+
+    <button class="icon-btn" id="accountOpen" aria-label="Customer account">
+      ◎
+    </button>
+
+  </div>
+
+</header>
+
+
+<!-- =====================================
+     MAIN CONTENT
+===================================== -->
+
+<main>
+
+
+<!-- =====================================
+     HOME PAGE
+===================================== -->
+
+<section class="page active" id="page-home">
+
+  <section class="hero">
+
+    <div class="hero-leaf leaf-left"></div>
+
+    <div class="hero-leaf leaf-right"></div>
+
+    <div class="hero-copy">
+
+      <p class="eyebrow">
+        FRESH · REFRESHING · CRAFTED FOR YOU
+      </p>
+
+      <h1>
+        Liquid<br>
+        <em>Crafters</em>
+      </h1>
+
+      <p class="hero-sub">
+        Juices · Milkshakes · Mojitos · Tea · Coffee & More
+      </p>
+
+      <div class="brush-line">
+        Crafting Happiness<br>
+        in Every Sip
+      </div>
+
+      <button class="gold-button hero-cta" data-page="menu">
+        Explore the Menu <span>→</span>
+      </button>
+
+    </div>
+
+    <div class="hero-drinks">
+
+      <img
+        class="hero-single-photo"
+        src="assets/hero-banner.webp"
+        alt="Liquid Crafters barista preparing a fresh beverage"
+      >
+
+    </div>
+
+  </section>
+
+  <section class="category-ribbon" id="homeCategories"></section>
+
+  <section class="why-section">
+
+    <div class="section-heading">
+
+      <span></span>
+
+      <h2>Why Choose Liquid Crafters?</h2>
+
+      <span></span>
+
+    </div>
+
+    <div class="feature-grid" id="featureGrid"></div>
+
+    <div class="feature-message" id="featureMessage" hidden>
+
+      <button class="close-x" id="featureClose">×</button>
+
+      <div class="feature-symbol">✦</div>
+
+      <h3 id="featureTitle"></h3>
+
+      <p id="featureText"></p>
+
+    </div>
+
+    <div class="order-stamp">
+
+      <b>
+        Order Now<br>
+        & Enjoy
+      </b>
+
+      <small>Your Favourite Sip!</small>
+
+    </div>
+
+  </section>
+
+</section>
+
+
+<!-- =====================================
+     MENU PAGE
+===================================== -->
+
+<section class="page" id="page-menu">
+
+  <div class="page-shell">
+
+    <div class="page-title">
+
+      <p class="eyebrow dark">
+        EXPLORE THE COLLECTION
+      </p>
+
+      <h1>
+        Find your <em>favourite sip.</em>
+      </h1>
+
+      <p>
+        Choose a collection to discover its drinks.
+      </p>
+
+    </div>
+
+    <div class="category-grid" id="menuCategories"></div>
+
+  </div>
+
+</section>
+
+
+<!-- =====================================
+     CATEGORY PAGE
+===================================== -->
+
+<section class="page" id="page-category">
+
+  <div class="page-shell">
+
+    <button class="back-link" data-page="menu">
+      ← All collections
+    </button>
+
+    <div class="page-title">
+
+      <p class="eyebrow dark" id="categoryEyebrow">
+        THE COLLECTION
+      </p>
+
+      <h1 id="categoryName">
+        Fruit Juices
+      </h1>
+
+      <p id="categoryDesc"></p>
+
+    </div>
+
+    <div class="category-tools">
+
+      <div id="subFilters" class="sub-filters"></div>
+
+      <input
+        id="productSearch"
+        type="search"
+        placeholder="Search this collection..."
+      >
+
+    </div>
+
+    <div class="product-grid" id="productGrid"></div>
+
+  </div>
+
+</section>
+
+
+<!-- =====================================
+     OFFERS PAGE
+===================================== -->
+
+<section class="page" id="page-offers">
+
+  <div class="page-shell narrow">
+
+    <p class="eyebrow dark">
+      A LITTLE EXTRA JOY
+    </p>
+
+    <h1>
+      Offers & <em>specials.</em>
+    </h1>
+
+    <div class="empty-state">
+
+      New offers will appear here when published by Liquid Crafters.
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- =====================================
+     TRACK ORDER PAGE
+===================================== -->
+
+<section class="page" id="page-track">
+
+  <div class="page-shell narrow">
+
+    <p class="eyebrow dark">
+      ORDER UPDATES
+    </p>
+
+    <h1>
+      Track your <em>order.</em>
+    </h1>
+
+    <form class="simple-form" id="trackForm">
+
+      <label>
+
+        Order ID
+
+        <input
+          id="trackId"
+          placeholder="Enter your order ID"
+          required
+        >
+
+      </label>
+
+      <button class="gold-button">
+        Find Order
+      </button>
+
+    </form>
+
+    <div id="trackResult" class="empty-state">
+
+      Enter your order ID to check its latest status.
+
+    </div>
+
+    <div id="savedOrderIds" class="saved-order-history" aria-live="polite"></div>
+
+  </div>
+
+</section>
+
+
+<!-- =====================================
+     ABOUT PAGE
+===================================== -->
+
+<section class="page" id="page-about">
+
+  <div class="page-shell narrow">
+
+    <p class="eyebrow dark">
+      OUR PHILOSOPHY
+    </p>
+
+    <h1>
+      Good drinks.<br>
+      <em>Good moments.</em>
+    </h1>
+
+    <p>
+      Liquid Crafters brings together fruit juices, milkshakes,
+      mojitos, tea, coffee and more. Our promise is simple:
+      Blended with Passion, Served with Freshness.
+    </p>
+
+    <button class="gold-button" data-page="menu">
+      Explore the Menu
+    </button>
+
+  </div>
+
+</section>
+
+</main>
+
+
+<!-- =====================================
+     FOOTER
+===================================== -->
+
+<footer class="site-footer">
+
+  <div class="footer-inner">
+
+    <div class="footer-brand">
+
+      <img src="assets/logo-original.png" alt="">
+
+      <div>
+
+        <b>Liquid Crafters</b>
+
+        <small>
+          Blended with Passion,<br>
+          Served with Freshness.
+        </small>
+
+      </div>
+
+    </div>
+
+    <div class="footer-facts">
+
+      <span>
+        ◷ &nbsp;10:00 AM – 10:00 PM
+      </span>
+
+      <span>
+        ♧ &nbsp;Delivery within 15 km
+      </span>
+
+      <button id="contactOpen" class="footer-contact">
+        Contact Us ↗
+      </button>
+
+      <button id="socialOpen" class="footer-contact subtle">
+        Follow Us
+      </button>
+
+      <button id="feedbackOpen" class="footer-contact subtle">
+        Give Feedback ♡
+      </button>
+
+    </div>
+
+  </div>
+
+  <div class="footer-bottom">
+
+    © <span id="year"></span> Liquid Crafters.
+    All rights reserved.
+
+    <span class="footer-divider">·</span>
+
+    <a
+      class="developer-contact"
+      href="mailto:hemaharshitha510@gmail.com?subject=Liquid%20Crafters%20Website%20Enquiry"
+    >
+      Contact Developer ↗
+    </a>
+
+  </div>
+
+</footer>
+
+
+<!-- =====================================
+     PRODUCT DETAILS DIALOG
+===================================== -->
+
+<dialog class="modal" id="productDialog">
+
+  <button class="close-x" data-close="productDialog">
+    ×
+  </button>
+
+  <img id="dialogImage" alt="">
+
+  <div>
+
+    <p class="eyebrow dark" id="dialogCategory"></p>
+
+    <h2 id="dialogName"></h2>
+
+    <p id="dialogDescription"></p>
+
+    <label>
+
+      Serving size
+
+      <select id="dialogSize">
+
+        <option value="Regular">Regular</option>
+
+        <option value="Medium">Medium</option>
+
+        <option value="Large">Large</option>
+
+      </select>
+
+    </label>
+
+    <p id="dialogSelectedPrice" class="selected-price"></p>
+
+    <p class="price-note">
+      Available sizes and prices are displayed above.
+    </p>
+
+    <button class="gold-button" id="addToCart">
+      Add to Cart
+    </button>
+
+    <button class="text-button" id="addToWishlist">
+      ♡ Save to Wishlist
+    </button>
+
+  </div>
+
+</dialog>
+
+
+<!-- =====================================
+     CUSTOMER CART DIALOG
+===================================== -->
+
+<dialog class="modal side-modal" id="cartDialog">
+
+  <button class="close-x" data-close="cartDialog">
+    ×
+  </button>
+
+  <p class="eyebrow dark">
+    YOUR SELECTION
+  </p>
+
+  <h2>Your Cart</h2>
+
+  <!-- Cart products and quantity controls appear here -->
+
+  <div id="cartLines" class="cart-lines"></div>
+
+  <!-- Subtotal and Grand Total appear here -->
+
+  <div id="cartGrandTotal" class="cart-grand-total"></div>
+
+  <p class="price-note">
+    Final delivery charges, if applicable, will be confirmed by the shop.
+  </p>
+
+  <button class="gold-button full" id="checkoutButton">
+    Continue to Checkout
+  </button>
+
+</dialog>
+
+
+<!-- =====================================
+     CUSTOMER CHECKOUT DIALOG
+===================================== -->
+
+<dialog class="modal" id="checkoutDialog">
+
+  <button class="close-x" data-close="checkoutDialog">
+    ×
+  </button>
+
+  <p class="eyebrow dark">
+    ALMOST THERE
+  </p>
+
+  <h2>Complete Your Order</h2>
+
+  <p>
+    Provide your delivery details below.
+  </p>
+
+  <form id="checkoutForm" class="simple-form">
+
+    <label>
+
+      Customer Name
+
+      <input
+        type="text"
+        id="orderCustomerName"
+        placeholder="Enter your full name"
+        autocomplete="name"
+        required
+      >
+
+    </label>
+
+
+    <label>
+
+      Mobile Number
+
+      <input
+        type="tel"
+        id="orderCustomerPhone"
+        inputmode="numeric"
+        pattern="[0-9]{10}"
+        maxlength="10"
+        placeholder="Enter 10-digit delivery number"
+        autocomplete="tel"
+        required
+      >
+
+    </label>
+
+
+    <label>
+
+      Delivery Address
+
+      <textarea
+        id="orderAddress"
+        placeholder="House number, street, area and city"
+        autocomplete="street-address"
+        required
+      ></textarea>
+
+    </label>
+
+
+    <label>
+
+      Landmark
+
+      <input
+        type="text"
+        id="orderLandmark"
+        placeholder="Nearby landmark"
+      >
+
+    </label>
+
+
+    <label>
+
+      Delivery Instructions (Optional)
+
+      <textarea
+        id="orderInstructions"
+        placeholder="Any special delivery instructions?"
+      ></textarea>
+
+    </label>
+
+
+    <!-- Delivery location map -->
+    <section class="delivery-map-section" aria-labelledby="deliveryMapTitle">
+      <h3 id="deliveryMapTitle">Choose Your Delivery Location</h3>
+      <p class="delivery-map-note">Move the pin to your delivery address, or use your current location. Please confirm the pin before placing an order.</p>
+      <div id="deliveryMap" role="application" aria-label="Interactive delivery location map"></div>
+      <div class="delivery-map-actions">
+        <button type="button" class="text-button" id="useCurrentLocation">Use My Current Location</button>
+        <button type="button" class="gold-button" id="confirmDeliveryLocation">Confirm Delivery Location</button>
+      </div>
+      <p id="deliveryLocationMessage" class="status-message" aria-live="polite">Select your delivery location on the map.</p>
+    </section>
+
+    <label class="payment-method-label">
+      Payment Method
+<select id="orderPaymentMethod" required>
+  <option value="COD" selected>Cash on Delivery</option>
+  <option value="RAZORPAY_LINK">Online Payment — Razorpay</option>
+</select>
+    </label>
+    <p class="price-note" id="paymentMethodNote">Cash will be collected when your order is delivered.</p>
+
+    <!-- Checkout order summary -->
+
+    <div id="checkoutSummary"></div>
+
+
+    <button
+      type="submit"
+      class="gold-button full"
+      id="placeOrderButton"
+    >
+      Place Order
+    </button>
+
+  </form>
+
+  <p id="checkoutMessage" class="status-message"></p>
+
+</dialog>
+
+
+<!-- =====================================
+     WISHLIST DIALOG
+===================================== -->
+
+<dialog class="modal side-modal" id="wishlistDialog">
+
+  <button class="close-x" data-close="wishlistDialog">
+    ×
+  </button>
+
+  <p class="eyebrow dark">
+    SAVED FAVOURITES
+  </p>
+
+  <h2>Your Wishlist</h2>
+
+  <div id="wishlistLines" class="cart-lines"></div>
+
+</dialog>
+
+
+<!-- =====================================
+     CUSTOMER ACCOUNT / OTP DIALOG
+===================================== -->
+
+<dialog class="modal" id="accountDialog">
+
+  <button class="close-x" data-close="accountDialog">
+    ×
+  </button>
+
+  <p class="eyebrow dark">
+    CUSTOMER ACCOUNT
+  </p>
+
+  <h2>Welcome to Liquid Crafters</h2>
+  <p>Sign in or create an account using your email address.</p>
+
+  <div class="auth-mode-switch">
+    <button type="button" class="gold-button" id="showLogin">Login</button>
+    <button type="button" class="text-button" id="showRegister">Create Account</button>
+  </div>
+
+  <h3 id="authModeTitle">Welcome back</h3>
+
+  <form id="customerLoginForm" class="simple-form">
+    <label>
+      Email Address
+      <input id="loginEmail" type="email" placeholder="you@example.com" autocomplete="email" required>
+    </label>
+    <label>
+      Password
+      <input id="loginPassword" type="password" placeholder="Enter your password" autocomplete="current-password" required>
+    </label>
+    <button type="submit" class="gold-button full">Login</button>
+    <button type="button" id="forgotPassword" class="text-button">Forgot Password?</button>
+  </form>
+
+  <form id="customerRegisterForm" class="simple-form" hidden>
+    <label>
+      Full Name
+      <input id="registerName" type="text" placeholder="Enter your full name" autocomplete="name" required>
+    </label>
+    <label>
+      Email Address
+      <input id="registerEmail" type="email" placeholder="you@example.com" autocomplete="email" required>
+    </label>
+    <label>
+      Password
+      <input id="registerPassword" type="password" minlength="6" placeholder="At least 6 characters" autocomplete="new-password" required>
+    </label>
+    <label>
+      Confirm Password
+      <input id="registerConfirmPassword" type="password" minlength="6" placeholder="Re-enter your password" autocomplete="new-password" required>
+    </label>
+    <button type="submit" class="gold-button full">Create Account</button>
+  </form>
+
+  <p id="customerAuthMessage" class="status-message" aria-live="polite"></p>
+</dialog>
+
+
+<!-- =====================================
+     CONTACT DIALOG
+===================================== -->
+
+<dialog class="modal" id="contactDialog">
+
+  <button class="close-x" data-close="contactDialog">
+    ×
+  </button>
+
+  <p class="eyebrow dark">
+    GET IN TOUCH
+  </p>
+
+  <h2>
+    Contact <em>Liquid Crafters.</em>
+  </h2>
+
+  <p>
+    Choose how you'd like to connect.
+    Contact details are shown only after opening this panel.
+  </p>
+
+  <div class="contact-options">
+
+    <a
+      href="https://wa.me/919182328951"
+      target="_blank"
+      rel="noopener"
+    >
+      Chat on WhatsApp <span>→</span>
+    </a>
+
+    <a href="mailto:developer7002@gmail.com">
+      Email the Shop <span>→</span>
+    </a>
+
+    <a
+      href="https://instagram.com/gazelle.1840545"
+      target="_blank"
+      rel="noopener"
+    >
+      Follow on Instagram <span>→</span>
+    </a>
+
+    <button id="showContactDetails">
+      Show contact details
+    </button>
+
+  </div>
+
+  <div id="contactDetails" class="contact-details" hidden>
+
+    <p>WhatsApp: +91 9182328951</p>
+
+    <p>Email: developer7002@gmail.com</p>
+
+    <p>Instagram: @gazelle.1840545</p>
+
+  </div>
+
+</dialog>
+
+
+<!-- =====================================
+     FEEDBACK DIALOG
+===================================== -->
+
+<dialog class="modal" id="feedbackDialog">
+
+  <button class="close-x" data-close="feedbackDialog">
+    ×
+  </button>
+
+  <p class="eyebrow dark">
+    YOUR VOICE MATTERS
+  </p>
+
+  <h2>Share your feedback</h2>
+
+  <form id="feedbackForm" class="simple-form">
+
+    <label>
+
+      Your name
+
+      <input id="feedbackName" required>
+
+    </label>
+
+    <label>
+
+      Your feedback
+
+      <textarea id="feedbackText" required></textarea>
+
+    </label>
+
+    <button class="gold-button">
+      Send Feedback
+    </button>
+
+  </form>
+
+  <p id="feedbackMessage" class="status-message"></p>
+
+</dialog>
+
+
+<!-- =====================================
+     SEARCH DIALOG
+===================================== -->
+
+<dialog class="modal" id="searchDialog">
+
+  <button class="close-x" data-close="searchDialog">
+    ×
+  </button>
+
+  <p class="eyebrow dark">
+    FIND YOUR FAVOURITE
+  </p>
+
+  <h2>Search the menu</h2>
+
+  <input
+    id="globalSearch"
+    class="big-search"
+    type="search"
+    placeholder="Search drinks..."
+  >
+
+  <div id="searchResults" class="search-results"></div>
+
+</dialog>
+
+
+<!-- =====================================
+     TOAST NOTIFICATION
+===================================== -->
+
+<div id="toast" class="toast" role="status"></div>
+
+
+<!-- =====================================
+     JAVASCRIPT
+===================================== -->
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+<script type="module" src="js/app.js"></script>
+
+</body>
+
+</html>

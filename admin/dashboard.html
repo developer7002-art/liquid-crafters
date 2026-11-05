@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#21050d"><title>Liquid Crafters | Admin Dashboard</title>
+<link rel="stylesheet" href="../styles.css">
+<style>
+:root{--bg:#18040a;--panel:#2a0712;--gold:#e7b85c;--cream:#fff0d5;--muted:#c9a9a5;--line:rgba(231,184,92,.32)}
+*{box-sizing:border-box}body.admin-body{margin:0;min-height:100vh;background:radial-gradient(ellipse at 85% 8%,#571022 0,transparent 38%),radial-gradient(ellipse at 10% 95%,#45101c 0,transparent 35%),var(--bg);color:var(--cream);font-family:Inter,system-ui,sans-serif}
+.admin-top{height:78px;padding:0 26px;display:flex;align-items:center;justify-content:space-between;background:linear-gradient(100deg,#2b0712,#4a0b1d 55%,#260610);border-bottom:1px solid var(--gold);position:sticky;top:0;z-index:20}
+.admin-brand{display:flex;align-items:center;gap:12px;color:var(--cream);font:700 20px Georgia,serif;text-decoration:none}.admin-brand img{width:42px;height:42px;object-fit:contain}.admin-brand small{display:block;font:700 9px Inter,sans-serif;letter-spacing:2px;color:var(--gold)}
+.admin-top-right{display:flex;align-items:center;gap:14px}.admin-top-right #adminEmailLabel{font-size:13px;color:#f4dcae}.admin-top-right button{padding:10px 15px;border:1px solid var(--line);border-radius:22px;background:#5a1023;color:var(--cream);cursor:pointer}
+.admin-layout{display:grid;grid-template-columns:230px minmax(0,1fr);max-width:1600px;margin:auto;min-height:calc(100vh - 78px)}
+.admin-sidebar{padding:24px 14px;background:linear-gradient(180deg,#260610,#1d050c);border-right:1px solid var(--line);display:flex;flex-direction:column;gap:7px}.admin-sidebar h3{margin:4px 12px 14px;color:var(--gold);font-size:11px;letter-spacing:2px;text-transform:uppercase}
+.admin-tab{width:100%;text-align:left;padding:13px 14px;border:1px solid transparent;border-radius:12px;background:transparent;color:#f8e8d1;cursor:pointer;font-size:14px}.admin-tab:before{content:"◇";display:inline-block;width:27px;color:var(--gold);font-size:17px}.admin-tab:hover{background:#ffffff0b;border-color:#e7b85c33}.admin-tab.active{background:linear-gradient(100deg,#86132f,#4a0b1d);border-color:#d69a4b;box-shadow:0 5px 18px #0005}
+.admin-sidebar a{margin:18px 5px 0;padding:12px;border:1px solid var(--line);border-radius:12px;text-align:center;color:#ffdc91;text-decoration:none;font-size:12px}
+.admin-content{padding:32px clamp(16px,3vw,42px) 55px;min-width:0}.admin-section{display:none}.admin-section.active{display:block}
+.admin-welcome{display:flex;align-items:center;justify-content:space-between;gap:18px;margin-bottom:24px}.eyebrow{color:var(--gold);font-size:10px;font-weight:800;letter-spacing:2px;margin:0 0 10px}.admin-content h1{font:700 clamp(28px,3vw,39px)/1.1 Georgia,serif;margin:0;color:#fff2dc}.admin-content h1 em{color:#ffdc91;font-style:normal}.admin-subtitle{color:var(--muted);font-size:13px;margin:10px 0 0}.welcome-mark{font-size:48px;color:var(--gold);padding:10px 22px;border:1px solid var(--line);border-radius:22px;background:#ffffff06}
+.admin-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:15px;margin:24px 0}.admin-stats article,.admin-panel,.analytics-card{background:linear-gradient(145deg,#3a0b19,#230610 75%);border:1px solid var(--line);border-radius:17px;box-shadow:0 12px 28px #0004,inset 0 1px #ffffff0b}.admin-stats article{padding:19px 21px;position:relative;overflow:hidden}.admin-stats small{display:block;color:#d6b8ad;font-size:12px;margin-bottom:12px}.admin-stats b{font:700 32px Georgia,serif;color:#ffdc91}
+.admin-dashboard-grid{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(250px,.8fr);gap:17px}.admin-panel,.analytics-card{padding:21px;margin:0 0 17px;min-width:0}.admin-panel h2,.analytics-card h2{font:700 20px Georgia,serif;margin:0 0 16px;color:var(--cream)}.analytics-head{display:flex;align-items:center;justify-content:space-between}.analytics-empty{min-height:155px;display:grid;place-items:center;text-align:center;color:var(--muted);font-size:13px;line-height:1.7;padding:20px}.analytics-empty span{display:block;font-size:34px;color:var(--gold)}
+.quick-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.quick-actions button{min-height:83px;border:1px solid var(--line);border-radius:13px;background:linear-gradient(145deg,#5a1022,#310815);color:var(--cream);font-weight:650;cursor:pointer}.quick-actions button span{display:block;color:var(--gold);font-size:23px;margin-bottom:6px}
+.gold-button{border:1px solid #f0c66f;border-radius:10px;padding:11px 17px;background:linear-gradient(120deg,#e5b65c,#a96a28);color:#270711;font-weight:800;cursor:pointer}.gold-button:hover{filter:brightness(1.08)}
+.admin-heading{display:flex;justify-content:space-between;align-items:end;gap:15px;margin-bottom:21px}.admin-search{width:min(100%,360px);padding:12px 14px;border:1px solid var(--line);border-radius:10px;background:#19040b;color:var(--cream);margin-bottom:15px}
+.admin-form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-bottom:18px}.admin-form-grid label{display:grid;gap:7px;color:#e8cfb8;font-size:12px}.admin-form-grid input,.admin-form-grid select,.admin-form-grid textarea{width:100%;padding:11px 12px;border:1px solid var(--line);border-radius:9px;background:#1b050c;color:var(--cream);font:inherit}.admin-form-grid textarea{min-height:80px}.admin-form-grid .wide{grid-column:1/-1}
+.footer-contact.subtle{padding:10px 15px;border:1px solid var(--line);border-radius:9px;background:#ffffff08;color:var(--cream);cursor:pointer}
+.table-wrap{overflow-x:auto}table{width:100%;border-collapse:collapse;min-width:650px}th,td{text-align:left;padding:13px 12px;border-bottom:1px solid #e7b85c20;font-size:13px}th{color:var(--gold);font-size:11px;text-transform:uppercase;letter-spacing:1px}td{color:#f5e5d5}.status-message{color:var(--muted);font-size:12px;line-height:1.6;margin:14px 0}.admin-notification-item{padding:14px 15px;border:1px solid var(--line);border-radius:12px;background:#ffffff08;margin:10px 0}.admin-notification-item strong{color:var(--gold)}.admin-notification-item p{color:var(--cream);margin:7px 0;font-size:13px}.admin-notification-item small{color:var(--muted)}
+@media(max-width:850px){.admin-layout{grid-template-columns:185px minmax(0,1fr)}.admin-content{padding:24px 16px}.admin-dashboard-grid{grid-template-columns:1fr}}
+@media(max-width:620px){.admin-top{height:auto;min-height:68px;padding:10px 13px}.admin-brand{font-size:15px;gap:8px}.admin-brand img{width:34px;height:34px}.admin-top-right #adminEmailLabel{display:none}.admin-top-right button{padding:8px 11px;font-size:11px}.admin-layout{display:block}.admin-sidebar{position:sticky;top:68px;z-index:15;display:flex;flex-direction:row;overflow-x:auto;padding:8px;background:#21050d;border-right:0;border-bottom:1px solid var(--line);gap:5px}.admin-sidebar h3,.admin-sidebar a{display:none}.admin-tab{white-space:nowrap;width:auto;padding:10px 12px;font-size:12px}.admin-tab:before{display:none}.admin-content{padding:22px 13px 40px}.welcome-mark{font-size:32px;padding:8px 13px}.admin-stats{gap:8px}.admin-stats article{padding:13px 10px}.admin-stats small{font-size:10px}.admin-stats b{font-size:24px}.admin-form-grid{grid-template-columns:1fr}.admin-form-grid .wide{grid-column:auto}.admin-heading{align-items:flex-start;flex-direction:column}.admin-panel,.analytics-card{padding:15px}}
+</style>
+</head>
+<body class="admin-body">
+<header class="admin-top">
+<a href="../index.html" class="admin-brand"><img src="../assets/logo-original.png" alt=""><span>Liquid Crafters<small>ADMIN CONTROL CENTRE</small></span></a>
+<div class="admin-top-right"><span id="adminEmailLabel"></span><button id="adminLogout">↪ Sign out</button></div>
+</header>
+<div class="admin-layout">
+<aside class="admin-sidebar">
+<h3>Management</h3>
+<button class="admin-tab active" data-tab="overview">Dashboard</button>
+<button class="admin-tab" data-tab="products">Products</button>
+<button class="admin-tab" data-tab="orders">Orders</button>
+<button class="admin-tab" data-tab="notifications">Notifications</button>
+<button class="admin-tab" data-tab="feedback">Feedback</button>
+<button class="admin-tab" data-tab="categories">Categories</button>
+<button class="admin-tab" data-tab="shop">Shop Settings</button>
+<a href="../index.html">View Customer Website ↗</a>
+</aside>
+<main class="admin-content">
+<section class="admin-section active" id="tab-overview">
+<div class="admin-welcome"><div><p class="eyebrow">LIQUID CRAFTERS · CONTROL CENTRE</p><h1>Welcome Back, <em>Admin.</em></h1><p class="admin-subtitle">Manage your shop, products and orders from one place.</p></div><div class="welcome-mark" aria-hidden="true">♛</div></div>
+<div class="admin-stats"><article><small>Products in catalogue</small><b id="statProducts">—</b></article><article><small>Total orders</small><b id="statOrders">—</b></article><article><small>Pending orders</small><b id="statPending">—</b></article></div>
+<div class="admin-dashboard-grid">
+<div><div class="analytics-card"><div class="analytics-head"><h2>Sales Overview</h2><span class="eyebrow">LIVE DATA</span></div><div class="analytics-empty"><div><span>⌁</span>Sales analytics will appear here when real customer orders<br>with verified totals are available in your database.</div></div></div>
+<div class="admin-panel"><h2>Recent activity</h2><p class="status-message">Open Orders to view and update the latest orders recorded in Firestore. No sample sales or customer figures are displayed.</p><button class="gold-button" data-jump="orders">View Orders →</button></div></div>
+<div><div class="admin-panel"><h2>Quick Actions</h2><div class="quick-actions"><button id="quickAddProduct"><span>＋</span>Add Product</button><button data-jump="products"><span>▧</span>Manage Products</button><button data-jump="orders"><span>▤</span>Manage Orders</button><button id="seedProducts"><span>✧</span>Import Catalogue</button></div><p id="seedMessage" class="status-message">Import the 50 starter products once to make the menu available from the live database.</p></div>
+<div class="admin-panel"><h2>Shop at a glance</h2><p class="status-message">Business hours: 10:00 AM – 10:00 PM</p><p class="status-message">Delivery radius: up to 15 km</p><button class="gold-button" data-jump="shop">Shop Settings →</button></div></div>
+</div>
+</section>
+<section class="admin-section" id="tab-products">
+<div class="admin-heading"><div><p class="eyebrow">CATALOGUE MANAGEMENT</p><h1>Products</h1><p class="admin-subtitle">Manage product details, prices, sizes and availability.</p></div><button class="gold-button" id="addProduct">＋ Add Product</button></div>
+<form id="productForm" class="admin-panel simple-form" hidden><input id="productId" type="hidden"><h2>Product details</h2><div class="admin-form-grid">
+<label>Product name<input id="pName" required></label><label>Category<select id="pCategory"><option>Fruit Juices</option><option>Milkshakes</option><option>Mojitos</option><option>Sips</option><option>Soft Drinks</option></select></label>
+<label>Subcategory<select id="pSub"><option value="">None</option><option>Tea</option><option>Coffee</option></select></label><label>Price (₹)<input id="pPrice" type="number" min="0" step="0.01" placeholder="Set price"></label>
+<label>Stock quantity<input id="pStock" type="number" min="0" value="0"></label><label>Image URL or path<input id="pImage" placeholder="../assets/products/fruit-1.jpg"></label>
+<label class="wide">Description<textarea id="pDescription"></textarea></label><label>Availability<select id="pAvailable"><option value="true">Available</option><option value="false">Unavailable</option></select></label>
+<label>Sizes (comma-separated)<input id="pSizes" placeholder="Regular, Medium, Large"></label><label class="wide">Upload image<input id="pUpload" type="file" accept="image/*"></label>
+</div><button class="gold-button">Save Product</button> <button type="button" id="cancelProduct" class="footer-contact subtle">Cancel</button></form>
+<div class="admin-panel"><input id="adminProductSearch" placeholder="Search products..." class="admin-search"><div class="table-wrap"><table><thead><tr><th>Product</th><th>Category</th><th>Price</th><th>Stock</th><th>Availability</th><th>Actions</th></tr></thead><tbody id="adminProductRows"></tbody></table></div></div>
+</section>
+<section class="admin-section" id="tab-orders"><p class="eyebrow">ORDER MANAGEMENT</p><h1>Orders</h1><p class="admin-subtitle">Review orders and update their fulfilment status.</p><div class="admin-panel"><div class="table-wrap"><table><thead><tr><th>Order</th><th>Customer</th><th>Total</th><th>Status</th><th>Payment</th><th>Update status</th></tr></thead><tbody id="adminOrderRows"></tbody></table></div><p class="status-message">Orders update live when customer checkout is enabled and database rules are configured.</p></div></section>
+<section class="admin-section" id="tab-notifications">
+<p class="eyebrow">LIVE ACTIVITY</p><h1>Notifications</h1>
+<p class="admin-subtitle">Alerts for new orders, customer feedback, delivered orders and successful payments while this dashboard is open.</p>
+<div class="admin-panel"><div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px"><button class="gold-button" id="enableBrowserNotifications">Enable Browser Notifications</button><button class="footer-contact subtle" id="clearAdminNotifications">Clear History</button></div><div id="adminNotificationList" aria-live="polite"></div></div>
+<p class="status-message">Browser notifications require permission. Live alerts are received while the admin dashboard is open; background push alerts when it is closed require Firebase Cloud Messaging and a deployed backend.</p>
+</section>
+<section class="admin-section" id="tab-feedback">
+<p class="eyebrow">CUSTOMER VOICE</p><h1>Customer Feedback</h1><p class="admin-subtitle">Feedback submitted through the customer website appears here in real time.</p>
+<div class="admin-panel"><div class="table-wrap"><table><thead><tr><th>Customer</th><th>Feedback</th><th>Received</th></tr></thead><tbody id="adminFeedbackRows"><tr><td colspan="3">Loading feedback...</td></tr></tbody></table></div></div>
+</section>
+<section class="admin-section" id="tab-categories"><p class="eyebrow">MENU STRUCTURE</p><h1>Categories</h1><div class="admin-panel"><p>Fruit Juices · Milkshakes · Mojitos · Sips (Tea & Coffee) · Soft Drinks</p><p class="status-message">Product category assignment is editable in the Products section. Custom category management can be added after the owner confirms any new categories.</p></div></section>
+<section class="admin-section" id="tab-shop"><p class="eyebrow">BUSINESS SETTINGS</p><h1>Shop Settings</h1><div class="admin-panel"><p>Business hours: 10:00 AM – 10:00 PM</p><p>Delivery radius: up to 15 km</p><p>WhatsApp and email are displayed only inside the customer Contact Us panel.</p><p class="status-message">Payment UPI, final delivery charges, shop address and product pricing must be confirmed by the owner before enabling live checkout.</p></div></section>
+</main></div>
+<div id="adminToast" class="toast"></div>
+<script type="module" src="dashboard.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded',()=>{const quick=document.getElementById('quickAddProduct');if(quick)quick.addEventListener('click',()=>{document.querySelector('[data-tab="products"]')?.click();setTimeout(()=>document.getElementById('addProduct')?.click(),0);});});
+</script>
+</body></html>
