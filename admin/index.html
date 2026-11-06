@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#21050d">
+  <title>Liquid Crafters | Admin Login</title>
+  <link rel="stylesheet" href="../styles.css">
+  <style>
+    :root {
+      --bg:#18040a; --panel:#2a0712; --gold:#e7b85c;
+      --cream:#fff0d5; --muted:#c9a9a5; --line:rgba(231,184,92,.32);
+    }
+    * { box-sizing:border-box; }
+    body {
+      margin:0; min-height:100vh; display:grid; place-items:center; padding:24px;
+      color:var(--cream); font-family:Inter,system-ui,sans-serif;
+      background:radial-gradient(ellipse at 85% 8%,#571022 0,transparent 38%),
+                 radial-gradient(ellipse at 10% 95%,#45101c 0,transparent 35%),var(--bg);
+    }
+    .login-card {
+      width:min(100%,440px); padding:34px; border:1px solid var(--line);
+      border-radius:22px; background:linear-gradient(145deg,#3a0b19,#230610 75%);
+      box-shadow:0 18px 55px #0007;
+    }
+    .brand { display:flex; align-items:center; gap:13px; margin-bottom:30px; }
+    .brand img { width:48px; height:48px; object-fit:contain; }
+    .brand-name { font:700 21px Georgia,serif; }
+    .brand small { display:block; margin-top:5px; color:var(--gold); font:700 9px Inter, sans-serif; letter-spacing:2px; }
+    .eyebrow { margin:0 0 9px; color:var(--gold); font-size:10px; font-weight:800; letter-spacing:2px; }
+    h1 { margin:0; color:#fff2dc; font:700 32px Georgia,serif; }
+    .intro { margin:10px 0 25px; color:var(--muted); font-size:13px; line-height:1.6; }
+    label { display:block; margin:16px 0 7px; color:#e8cfb8; font-size:12px; }
+    input {
+      width:100%; padding:13px 14px; border:1px solid var(--line); border-radius:10px;
+      background:#1b050c; color:var(--cream); font:inherit; outline:none;
+    }
+    input:focus { border-color:var(--gold); box-shadow:0 0 0 3px #e7b85c20; }
+    button {
+      width:100%; margin-top:22px; padding:13px 16px; border:1px solid #f0c66f;
+      border-radius:10px; background:linear-gradient(120deg,#e5b65c,#a96a28);
+      color:#270711; font-weight:800; cursor:pointer;
+    }
+    button:disabled { opacity:.65; cursor:wait; }
+    .message { min-height:22px; margin:14px 0 0; color:#ffd08a; font-size:12px; line-height:1.5; }
+    .back { display:block; margin-top:20px; color:#ffdc91; text-align:center; font-size:12px; text-decoration:none; }
+    .back:hover { text-decoration:underline; }
+  </style>
+</head>
+<body>
+  <main class="login-card">
+    <div class="brand">
+      <img src="../assets/logo-original.png" alt="Liquid Crafters logo">
+      <div class="brand-name">Liquid Crafters<small>ADMIN CONTROL CENTRE</small></div>
+    </div>
+
+    <p class="eyebrow">SECURE ADMIN ACCESS</p>
+    <h1>Welcome back.</h1>
+    <p class="intro">Sign in with your existing Firebase admin account to manage products, orders and shop activity.</p>
+
+    <form id="adminLoginForm">
+      <label for="adminEmail">Email address</label>
+      <input id="adminEmail" type="email" autocomplete="username" placeholder="Admin email" required>
+
+      <label for="adminPassword">Password</label>
+      <input id="adminPassword" type="password" autocomplete="current-password" placeholder="Your password" required>
+
+      <button id="loginButton" type="submit">Sign in to dashboard</button>
+      <p id="loginMessage" class="message" role="status" aria-live="polite"></p>
+    </form>
+
+    <a class="back" href="../index.html">← Back to customer website</a>
+  </main>
+
+  <script type="module">
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js';
+    import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut }
+      from 'https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js';
+    import { getFirestore, doc, getDoc }
+      from 'https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js';
+    import { firebaseConfig } from '../js/firebase-config.js';
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    const form = document.getElementById('adminLoginForm');
+    const emailInput = document.getElementById('adminEmail');
+    const passwordInput = document.getElementById('adminPassword');
+    const button = document.getElementById('loginButton');
+    const message = document.getElementById('loginMessage');
+
+    async function isActiveAdmin(user) {
+      const adminSnapshot = await getDoc(doc(db, 'admins', user.uid));
+      return adminSnapshot.exists() && adminSnapshot.data().active === true;
+    }
+
+    // If an authorized admin already has a valid session, skip the login form.
+    onAuthStateChanged(auth, async user => {
+      if (!user) return;
+      try {
+        if (await isActiveAdmin(user)) {
+          window.location.replace('./dashboard.html');
+        } else {
+          await signOut(auth);
+        }
+      } catch (error) {
+        console.error('Admin session check failed:', error);
+        message.textContent = 'Could not verify admin access. Please sign in again.';
+      }
+    });
+
+    form.addEventListener('submit', async event => {
+      event.preventDefault();
+      message.textContent = '';
+      button.disabled = true;
+      button.textContent = 'Verifying…';
+
+      try {
+        const credential = await signInWithEmailAndPassword(
+          auth, emailInput.value.trim(), passwordInput.value
+        );
+
+        if (!(await isActiveAdmin(credential.user))) {
+          await signOut(auth);
+          throw new Error('This account is not authorized as an active admin. Contact the site owner.');
+        }
+
+        message.textContent = 'Login successful. Opening dashboard…';
+        window.location.replace('./dashboard.html');
+      } catch (error) {
+        console.error('Admin login failed:', error);
+        const messages = {
+          'auth/invalid-credential': 'Incorrect email or password.',
+          'auth/user-not-found': 'No Firebase account exists for this email.',
+          'auth/wrong-password': 'Incorrect email or password.',
+          'auth/too-many-requests': 'Too many attempts. Please wait and try again.',
+          'auth/invalid-email': 'Enter a valid email address.'
+        };
+        message.textContent = messages[error.code] || error.message || 'Unable to sign in. Please try again.';
+      } finally {
+        button.disabled = false;
+        button.textContent = 'Sign in to dashboard';
+      }
+    });
+  </script>
+</body>
+</html>
