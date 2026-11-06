@@ -55,12 +55,4 @@ The Firebase web configuration in `js/firebase-config.js` is the project configu
 - Admin login page is private by route and protected by Firebase Authentication + admin document check. Security rules also enforce admin permissions; hiding a link is not security.
 - Shop contact information appears only after the customer opens Contact Us. Details used: WhatsApp +91 9182328951, shop email developer7002@gmail.com, Instagram @gazelle.1840545, business hours 10 AM–10 PM. Developer contact remains separate and is not shown in the shop contact panel.
 
-
-## Developer contact
-The customer-site footer includes a separate **Contact Developer** button. It opens an email to `hemaharshitha510@gmail.com`; this is separate from the shop contact panel.
-
-
-## Final homepage image update
-The three separate hero drink photos have been replaced with one single barista photograph cropped from the latest supplied reference image. The hero title and Explore the Menu control remain live HTML elements.
-
-The homepage hero uses the full approved Liquid Crafters banner image as one visual on the right side of the hero, with the Explore the Menu button remaining a live website control on the left.
+Liquid Crafters deployment retry.
